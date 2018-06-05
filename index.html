@@ -1,1 +1,561 @@
-
+<body>
+<canvas id="left" width="35px" height="180px"></canvas>
+<canvas id="hand1" width="110px" height="180px"></canvas>
+<canvas id="balance" width="30px" height="180px"></canvas>
+<canvas id="hand2" width="110px" height="180px"></canvas>
+<canvas id="right" width="35px" height="180px"></canvas>
+<br>
+</body>
+<script>
+<!--Test Settings-->
+window.onload = function() {
+	hand1.full();
+	hand2.full();
+	setAmount.P1(11, P1[0]);
+	setAmount.P1(21, P1[1]);
+	leftArrow("grey");
+	rightArrow("grey");
+	enableClick();
+	setTimeout(enableClick, 10000);
+}
+<!--End Test Settings-->
+<!--UI-->
+const balanceCanvas = document.getElementById('balance');
+const balance = balanceCanvas.getContext('2d');
+const hand1 = document.getElementById('hand1');
+const hand2 = document.getElementById('hand2');
+const h1ctx = hand1.getContext('2d');
+const h2ctx = hand2.getContext('2d');
+const leftButton = document.getElementById('left');
+const rightButton = document.getElementById('right');
+const requestAnimationFrame = window.requestAnimationFrame || 				 window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+var P1 = [2, 3];
+var P1swap = [2, 3];
+function enableClick() {
+	hand1.onclick = function() {
+		if (P1[0] == P1swap[0]) {
+			disableClick();
+			drawCheck(h1ctx, 42, 50);
+			setTimeout(function(){fadeOut(hand1);}, 1000);
+			hand1.style.opacity = 1;
+		}
+	}
+	hand2.onclick = function() {
+		if (P1[1] == P1swap[1]) {
+			disableClick();
+			drawCheck(h2ctx, 42, 50);
+			setTimeout(function(){fadeOut(hand2);}, 1000);
+			hand2.style.opacity = 1;
+		}
+	}
+	balanceCanvas.onclick = function() {
+		if (P1[0] != P1swap[0]) {
+			P1[0] = P1swap[0];
+			P1[1] = P1swap[1];
+			display(1);
+			const canvas = document.getElementById('balance');
+			const ctx = canvas.getContext('2d');
+			drawCheck(ctx, 3, 90);
+			setTimeout(function(){fadeOut(canvas);}, 1000);
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			canvas.style.opacity = 1;
+		}
+	}
+	leftButton.style.opacity = "1";
+	rightButton.style.opacity = "1";
+	leftButton.onclick = function() {
+		if (P1swap[1]-1 >= 0 && P1swap[0]+1 < 5) {
+  	  P1swap[1]--;
+			P1swap[0]++;
+			display(1);
+		}
+	}
+	rightButton.onclick = function() {
+		if (P1swap[0]-1 >= 0 && P1swap[1]+1 < 5) {
+  	  P1swap[0]--;
+			P1swap[1]++;
+			display(1);
+		}
+	}
+	leftButton.onmouseover = function() {
+		leftArrow("#595959");
+	}
+	leftButton.onmouseout = function() {
+		leftArrow("grey");
+	}
+	rightButton.onmouseover = function() {
+		rightArrow("#595959");
+	}
+	rightButton.onmouseout = function() {
+		rightArrow("grey");
+	}
+}
+function disableClick() {
+	hand1.onclick = function() {
+		return;
+	}
+	hand2.onclick = function() {
+		return;
+	}
+	balanceCanvas.onclick = function() {
+		return;
+	}
+	leftButton.style.opacity = "0";
+	rightButton.style.opacity = "0";
+	leftButton.onclick = function() {
+		return;
+	}
+	rightButton.onclick = function() {
+		return;
+	}
+}
+<!--Display Shortcuts-->
+function display(i) {
+	switch (i) {
+		case 1:
+			if (P1swap[0] == P1[0]) {
+				setAmount.P1(11, P1swap[0]);
+				hand1.full();
+				setAmount.P1(21, P1swap[1]);
+				hand2.full();
+			}
+			else {
+				setAmount.P1(12, P1swap[0]);
+				hand1.ghost();
+				setAmount.P1(22, P1swap[1]);
+				hand2.ghost();
+			}
+			break;
+	}
+}
+<!--End Display Shortcuts-->
+<!--Drawing Hands-->
+var appear = {full:{}, ghost:{}};
+<!--Ghost Settings-->
+<!--Full-->
+<!--Tan-->
+appear.full.tan = function(ctx) {
+	ctx.fillStyle = 'rgba(255, 204, 153, 1)';
+}
+<!--Pink-->
+appear.full.pink = function(ctx) {
+	ctx.fillStyle = 'rgba(255, 204, 255, 1)';
+}
+<!--Ghost-->
+<!--Tan-->
+appear.ghost.tan = function(ctx) {
+	ctx.fillStyle = 'rgba(255, 204, 153, .75)';
+}
+		<!--Pink-->
+appear.ghost.pink = function(ctx) {
+	ctx.fillStyle = 'rgba(255, 204, 255, .75)';
+}
+<!--End Ghost Settings-->
+<!--Hand 1 Body-->
+hand1.full = function() {	
+	appear.full.tan(h1ctx);
+	h1ctx.beginPath();
+	h1ctx.clearRect(0, 0, 110, 85);
+	h1ctx.moveTo(0, 85);
+	h1ctx.lineTo(20, 85);
+	h1ctx.arc(22.5, 85, 2.5, Math.PI, 0, false);
+	h1ctx.lineTo(50, 85);
+	h1ctx.arc(52.5, 85, 2.5, Math.PI, 0, false);
+	h1ctx.lineTo(80, 85);
+	h1ctx.arc(82.5, 85, 2.5, Math.PI, 0, false);
+	h1ctx.lineTo(110, 85);
+	h1ctx.lineTo(110, 20);
+	h1ctx.quadraticCurveTo(60, -20, 0, 20);
+	h1ctx.closePath();
+	h1ctx.fill();
+}
+hand1.ghost = function() {	
+	appear.ghost.tan(h1ctx);
+	h1ctx.beginPath();
+	h1ctx.clearRect(0, 0, 110, 85);
+	h1ctx.moveTo(0, 85);
+	h1ctx.lineTo(20, 85);
+	h1ctx.arc(22.5, 85, 2.5, Math.PI, 0, false);
+	h1ctx.lineTo(50, 85);
+	h1ctx.arc(52.5, 85, 2.5, Math.PI, 0, false);
+	h1ctx.lineTo(80, 85);
+	h1ctx.arc(82.5, 85, 2.5, Math.PI, 0, false);
+	h1ctx.lineTo(110, 85);
+	h1ctx.lineTo(110, 20);
+	h1ctx.quadraticCurveTo(60, -20, 0, 20);
+	h1ctx.closePath();
+	h1ctx.fill();
+}
+<!--End Hand 1 Body-->
+<!--Hand 2 Body-->
+hand2.full = function() {	
+	appear.full.tan(h2ctx);
+	h2ctx.beginPath();
+	h2ctx.clearRect(0, 0, 110, 85);
+	h2ctx.moveTo(0, 85);
+	h2ctx.lineTo(25, 85);
+	h2ctx.arc(27.5, 85, 2.5, Math.PI, 0, false);
+	h2ctx.lineTo(55, 85);
+	h2ctx.arc(57.5, 85, 2.5, Math.PI, 0, false);
+	h2ctx.lineTo(85, 85);
+	h2ctx.arc(87.5, 85, 2.5, Math.PI, 0, false);
+	h2ctx.lineTo(110, 85);
+	h2ctx.lineTo(110, 20);
+	h2ctx.quadraticCurveTo(60, -20, 0, 20);
+	h2ctx.closePath();
+	h2ctx.fill();
+}
+hand2.ghost = function() {
+	appear.ghost.tan(h2ctx);
+	h2ctx.beginPath();
+	h2ctx.clearRect(0, 0, 110, 85);
+	h2ctx.moveTo(0, 85);
+	h2ctx.lineTo(25, 85);
+	h2ctx.arc(27.5, 85, 2.5, Math.PI, 0, false);
+	h2ctx.lineTo(55, 85);
+	h2ctx.arc(57.5, 85, 2.5, Math.PI, 0, false);
+	h2ctx.lineTo(85, 85);
+	h2ctx.arc(87.5, 85, 2.5, Math.PI, 0, false);
+	h2ctx.lineTo(110, 85);
+	h2ctx.lineTo(110, 20);
+	h2ctx.quadraticCurveTo(60, -20, 0, 20);
+	h2ctx.closePath();
+	h2ctx.fill();
+}
+<!--End Hand 2 Body-->
+<!--Finger Prototype-->
+function finger(ctx, x, y, height, width) {
+	this.ctx = ctx;
+	this.x = x;
+	this.y = y;
+	this.height = height;
+	this.width = width;
+}
+finger.prototype.clear = function() {
+	this.ctx.clearRect(this.x, this.y, this.width, this.height);
+}
+finger.prototype.open = function() {
+	var ctx = this.ctx;
+	var x = this.x;
+	var y = this.y;
+	var height = this.height;
+	var width = this.width;
+	this.clear();
+	appear.full.tan(ctx);
+	ctx.beginPath();
+	ctx.moveTo(x, y);
+	ctx.lineTo(x, y+height-width/2);
+	ctx.arc(x+width/2, y+height-width/2, width/2, Math.PI, 0, true);
+	ctx.lineTo(x+width, y);
+	ctx.closePath();
+	ctx.fill();
+	appear.full.pink(ctx);
+	ctx.beginPath();
+	ctx.moveTo(x+width/6, y+height/5*4);
+	ctx.lineTo(x+((width/6)*5), y+height/5*4);
+	ctx.lineTo(x+((width/6)*5), y+height/8*7);
+	ctx.quadraticCurveTo(x+width/2, y+height/4*4, x+width/6, y+height/8*7);
+	ctx.closePath();
+	ctx.fill();
+}
+finger.prototype.openGhost = function() {
+	var ctx = this.ctx;
+	var x = this.x;
+	var y = this.y;
+	var height = this.height;
+	var width = this.width;
+	this.clear();
+	appear.ghost.tan(ctx);
+	ctx.beginPath();
+	ctx.moveTo(x, y);
+	ctx.lineTo(x, y+height-width/2);
+	ctx.arc(x+width/2, y+height-width/2, width/2, Math.PI, 0, true);
+	ctx.lineTo(x+width, y);
+	ctx.closePath();
+	ctx.fill();
+}
+finger.prototype.close = function() {
+	var ctx = this.ctx;
+	var x = this.x;
+	var y = this.y;
+	var width = this.width;
+	this.clear();
+	appear.full.tan(ctx);
+	ctx.beginPath();
+	ctx.moveTo(x, y);
+	ctx.arc(x+width/2, y, width/2, Math.PI, 0, true);
+	ctx.closePath();
+	ctx.fill();
+}
+finger.prototype.closeGhost = function() {
+	var ctx = this.ctx;
+	var x = this.x;
+	var y = this.y;
+	var width = this.width;
+	this.clear();
+	appear.ghost.tan(ctx);
+	ctx.beginPath();
+	ctx.moveTo(x, y);
+	ctx.arc(x+width/2, y, width/2, Math.PI, 0, true);
+	ctx.closePath();
+	ctx.fill();
+} 
+<!--End Finger Prototype-->
+<!--End Drawing Hands-->
+<!--Drawing Checkmark-->
+function drawCheck(ctx, x, y) {
+	var x1 = x;
+	var y1 = y;
+	var x2 = x1;
+	var y2 = y1;
+	var x3 = x1 + 14;
+	var y3 = y1 + 7;
+	ctx.beginPath();
+	ctx.strokeStyle = "green";
+	ctx.lineCap = "round";
+	ctx.lineWidth = 5;
+	ctx.moveTo(x1, y1);
+	function draw() {
+		x2++;
+		y2 += .5;
+		ctx.lineTo(x2, y2);
+		ctx.stroke();
+		if (x2<x1+14) {
+			requestAnimationFrame(draw);
+		} else {
+			function drawNext() {
+				x3 += .5;
+				y3 -= 1.5;
+				ctx.lineTo(x3, y3);
+				ctx.stroke();
+				if (x3<x1+24) {
+					requestAnimationFrame(drawNext);
+				}	else {
+					return;
+				}
+			}
+			drawNext();
+			return;
+		}
+	}
+	draw();
+}
+<!--End Drawing Checkmark-->
+<!--Drawing Arrows-->
+<!--Left Arrow-->
+const LAcanvas = document.getElementById('left');
+const LActx = LAcanvas.getContext('2d');
+function leftArrow(color) {
+	LActx.beginPath();
+	LActx.strokeStyle = color;
+	LActx.fillStyle = color;
+	LActx.lineWidth = 3;
+	LActx.lineJoin = "round";
+	LActx.moveTo(3, 90);
+	LActx.lineTo(27, 120);
+	LActx.lineTo(27, 60);
+	LActx.closePath();
+	LActx.fill();
+	LActx.stroke();
+}
+<!--End Left Arrow-->
+<!--Right Arrow-->
+const RAcanvas = document.getElementById('right');
+const RActx = RAcanvas.getContext('2d');
+function rightArrow(color) {
+	RActx.beginPath();
+	RActx.strokeStyle = color;
+	RActx.fillStyle = color;
+	RActx.lineWidth = 3;
+	RActx.lineJoin = "round";
+	RActx.moveTo(32, 90);
+	RActx.lineTo(8, 120);
+	RActx.lineTo(8, 60);
+	RActx.closePath();
+	RActx.fill();
+	RActx.stroke();
+}
+<!--End Right Arrow-->
+<!--End Drawing Arrows-->
+<!--End Drawing-->
+<!--Hand 1-->
+<!--Finger 1-->
+var h1f1 = new finger(h1ctx, 85, 85, 85, 25);
+<!--Finger 2-->
+var h1f2 = new finger(h1ctx, 55, 85, 95, 25);
+<!--Finger 3-->
+var h1f3 = new finger(h1ctx, 25, 85, 87.5, 25);
+<!--Finger 4-->
+var h1f4 = new finger(h1ctx, 0, 85, 65, 20);
+<!--End Hand 1-->
+<!--Hand 2-->
+<!--Finger 1-->
+var h2f1 = new finger(h2ctx, 0, 85, 85, 25);
+<!--Finger 2-->
+var h2f2 = new finger(h2ctx, 30, 85, 95, 25);
+<!--Finger 3-->
+var h2f3 = new finger(h2ctx, 60, 85, 87.5, 25);
+<!--Finger 4-->
+var h2f4 = new finger(h2ctx, 90, 85, 65, 20);
+<!--End Hand 2-->
+<!--Finger Quick Settings-->
+var setAmount = {P1:{}, CPU:{}}
+setAmount.P1 = function(type, open) {
+	switch (type) {
+		<!--Hand 1 Normal-->
+		case 11: 
+			switch (open) {
+				case 0:
+					h1f1.close();
+					h1f2.close();
+					h1f3.close();
+					h1f4.close();
+					break;
+				case 1:	
+					h1f1.open();
+					h1f2.close();
+					h1f3.close();
+					h1f4.close();
+					break;
+				case 2:
+					h1f1.open();
+					h1f2.open();
+					h1f3.close();
+					h1f4.close();
+					break;
+				case 3:
+					h1f1.open();
+					h1f2.open();
+					h1f3.open();
+					h1f4.close();
+					break;
+				case 4:
+					h1f1.open();
+					h1f2.open();
+					h1f3.open();
+					h1f4.open();
+					break;
+			}
+			break;
+		<!--Hand 1 Ghost-->
+		case 12:
+			switch (open) {
+				case 0:
+					h1f1.closeGhost();
+					h1f2.closeGhost();
+					h1f3.closeGhost();
+					h1f4.closeGhost();
+					break;
+				case 1:
+					h1f1.openGhost();
+					h1f2.closeGhost();
+					h1f3.closeGhost();
+					h1f4.closeGhost();
+					break;
+				case 2:
+					h1f1.openGhost();
+					h1f2.openGhost();
+					h1f3.closeGhost();
+					h1f4.closeGhost();
+					break;
+				case 3:
+					h1f1.openGhost();
+					h1f2.openGhost();
+					h1f3.openGhost();
+					h1f4.closeGhost();
+					break;
+				case 4:
+					h1f1.openGhost();
+					h1f2.openGhost();
+					h1f3.openGhost();
+					h1f4.openGhost();
+					break;
+			}
+			break;
+		<!--Hand 2 Normal-->
+		case 21:
+			switch (open) {
+				case 0:
+					h2f1.close();
+					h2f2.close();
+					h2f3.close();
+					h2f4.close();
+					break;
+				case 1:	
+					h2f1.open();
+					h2f2.close();
+					h2f3.close();
+					h2f4.close();
+					break;
+				case 2:
+					h2f1.open();
+					h2f2.open();
+					h2f3.close();
+					h2f4.close();
+					break;
+				case 3:
+					h2f1.open();
+					h2f2.open();
+					h2f3.open();
+					h2f4.close();
+					break;
+				case 4:
+					h2f1.open();
+					h2f2.open();
+					h2f3.open();
+					h2f4.open();
+					break;
+			}
+			break;
+		<!--Hand 2 Ghost-->
+		case 22:
+			switch (open) {
+				case 0:
+					h2f1.closeGhost();
+					h2f2.closeGhost();
+					h2f3.closeGhost();
+					h2f4.closeGhost();
+				case 1:
+					h2f1.openGhost();
+					h2f2.closeGhost();
+					h2f3.closeGhost();
+					h2f4.closeGhost();
+					break;
+				case 2:
+					h2f1.openGhost();
+					h2f2.openGhost();
+					h2f3.closeGhost();
+					h2f4.closeGhost();
+					break;
+				case 3:
+					h2f1.openGhost();
+					h2f2.openGhost();
+					h2f3.openGhost();
+					h2f4.closeGhost();
+					break;
+				case 4:
+					h2f1.openGhost();
+					h2f2.openGhost();
+					h2f3.openGhost();
+					h2f4.openGhost();
+					break;
+			}
+			break;
+	}
+}
+<!--End Finger Quick Settings-->
+<!--CSS Fade Out-->
+	function fadeOut(obj) {
+	var opc = 1;
+		function fade() {
+			opc -= 0.125;
+			obj.style.opacity = opc+"";
+			if (opc > 0.1) {
+				requestAnimationFrame(fade);
+			}
+		}
+		fade();
+	}
+<!--End CSS Fade Out-->
+<!--End UI-->
+</script>
