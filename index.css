@@ -1,0 +1,21 @@
+body {
+	background-color: blue;
+}
+h1 {
+  display: inline;
+}
+textarea {
+  width: 8px;
+  height: 12px;
+  resize: none;
+  overflow: hidden;
+  outline: green;
+  color: rgba(0, 0, 0, 1);
+}
+button {
+  margin: none;
+  border: none;
+}
+* {
+  user-select: none;
+}
